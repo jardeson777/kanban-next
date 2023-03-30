@@ -2,6 +2,7 @@ import Head from "next/head";
 import { Inter } from "next/font/google";
 import Menu from "@/components/Menu";
 import { Box, Flex } from "@chakra-ui/react";
+import Dashboard from "@/components/containersPage/Dashboard";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,10 +19,13 @@ export default function Home() {
         <Flex>
           <Menu />
           <Box
-            background="blue.400"
+            background="blue.500"
             width="80vw"
-            borderRadius="20px 0 0 20px "
-          ></Box>
+            borderRadius="20px 0 0 20px"
+            padding="50px"
+          >
+            <Dashboard />
+          </Box>
         </Flex>
       </main>
     </>
