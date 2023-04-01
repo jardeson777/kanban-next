@@ -18,14 +18,15 @@ export default function Home() {
       <main>
         <Flex>
           <Menu />
-          <Box
+          <Flex
             background="blue.500"
             width="80vw"
             borderRadius="20px 0 0 20px"
             padding="50px"
+            flex={1}
           >
             <Dashboard />
-          </Box>
+          </Flex>
         </Flex>
       </main>
     </>
