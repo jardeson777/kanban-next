@@ -1,5 +1,5 @@
 import ListTask from "@/components/ListTask";
-import { Box, Card, Flex, Heading, Text } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import Header from "./Header";
 
 const Dashboard = () => {

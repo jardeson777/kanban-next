@@ -5,6 +5,7 @@ import { Box, Flex } from "@chakra-ui/react";
 import Dashboard from "@/components/containersPage/Dashboard";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
+import { TaskProvider } from "@/hooks/useTasks";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,7 +29,9 @@ export default function Home() {
             flex={1}
           >
             <DndProvider backend={HTML5Backend}>
-              <Dashboard />
+              <TaskProvider>
+                <Dashboard />
+              </TaskProvider>
             </DndProvider>
           </Flex>
         </Flex>
