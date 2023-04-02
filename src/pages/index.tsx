@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import Menu from "@/components/Menu";
 import { Box, Flex } from "@chakra-ui/react";
 import Dashboard from "@/components/containersPage/Dashboard";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndProvider } from "react-dnd";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +27,9 @@ export default function Home() {
             padding="50px"
             flex={1}
           >
-            <Dashboard />
+            <DndProvider backend={HTML5Backend}>
+              <Dashboard />
+            </DndProvider>
           </Flex>
         </Flex>
       </main>
