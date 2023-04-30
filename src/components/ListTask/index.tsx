@@ -1,11 +1,11 @@
 import { useTask } from "@/hooks/useTasks";
-import { Task } from "@/module/Task";
+import { TaskUtil } from "@/module/Task";
 import { Box, Card, Text } from "@chakra-ui/react";
 import CardTask from "../CardTask";
 
 type ListTaskProps = {
   title: string;
-  tasks: Task[];
+  tasks: (TaskUtil | undefined)[];
 };
 
 const ListTask = ({ title, tasks }: ListTaskProps) => {
@@ -21,8 +21,9 @@ const ListTask = ({ title, tasks }: ListTaskProps) => {
         {title}
       </Text>
       <Card width="20vw" minWidth="200px" padding="10px" height="70vh">
-        {tasks.map((task, index) => {
-          return <CardTask key={task.id} data={task} index={index} />;
+        {tasks.map((task) => {
+          if (task)
+            return <CardTask key={task.id} data={task} index={task.index} />;
         })}
       </Card>
     </Box>

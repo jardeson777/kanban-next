@@ -4,3 +4,7 @@ export type Task = {
   description: string;
   status: "toDo" | "doing" | "done";
 };
+
+export interface TaskUtil extends Task {
+  index: number;
+}

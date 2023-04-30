@@ -1,10 +1,12 @@
 import ListTask from "@/components/ListTask";
 import { useTask } from "@/hooks/useTasks";
+import { TaskUtil } from "@/module/Task";
 import { Flex } from "@chakra-ui/react";
 import Header from "./Header";
 
 const Dashboard = () => {
   const { tasks } = useTask();
+
   return (
     <Flex
       direction="column"
@@ -18,15 +20,27 @@ const Dashboard = () => {
       <Flex justifyContent="space-between">
         <ListTask
           title="To do"
-          tasks={tasks.filter((task) => task.status === "toDo")}
+          tasks={tasks.map((task, index) => {
+            if (task.status === "toDo") {
+              return { ...task, index };
+            }
+          })}
         />
         <ListTask
           title="Doing"
-          tasks={tasks.filter((task) => task.status === "doing")}
+          tasks={tasks.map((task, index) => {
+            if (task.status === "doing") {
+              return { ...task, index };
+            }
+          })}
         />
         <ListTask
           title="Done"
-          tasks={tasks.filter((task) => task.status === "done")}
+          tasks={tasks.map((task, index) => {
+            if (task.status === "done") {
+              return { ...task, index };
+            }
+          })}
         />
       </Flex>
     </Flex>
