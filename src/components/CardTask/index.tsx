@@ -1,5 +1,5 @@
 import { useTask } from "@/hooks/useTasks";
-import { Task } from "@/module/Task";
+import { StatusTask, Task } from "@/module/Task";
 import { Box, Card, Heading, Text } from "@chakra-ui/react";
 import { useRef } from "react";
 import { useDrag, useDrop, XYCoord } from "react-dnd";
@@ -9,21 +9,26 @@ type CardTaskProps = {
   index: number;
 };
 
-const CardTask = ({
-  data: { id, description, title, status },
-  index,
-}: CardTaskProps) => {
+const CardTask = ({ data, index }: CardTaskProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
-  const { moveTaskPosition } = useTask();
+  const { moveTaskPosition, changeStatus } = useTask();
+
+  const { id, description, title, status } = data;
 
   const [collected, refDrag] = useDrag(() => ({
     type: "CardTask",
-    item: { index },
+    item: { index, data },
   }));
 
   const [collectedProps, refDrop] = useDrop(() => ({
     accept: ["CardTask"],
-    hover(item: { index: number }, monitor) {
+    drop(item: { index: number; data: Task }, monitor) {
+      if (status !== item.data.status) {
+        changeStatus(item.data, status);
+        return;
+      }
+    },
+    hover(item: { index: number; data: Task }, monitor) {
       if (!cardRef.current) {
         return;
       }
@@ -50,7 +55,11 @@ const CardTask = ({
         return;
       }
 
-      moveTaskPosition(hoverIndex, dragIndex);
+      if (status !== item.data.status) {
+        return;
+      }
+
+      moveTaskPosition(hoverIndex, dragIndex, status);
 
       item.index = hoverIndex;
     },

@@ -1,4 +1,4 @@
-import { Task } from "@/module/Task";
+import { StatusTask, Task } from "@/module/Task";
 import {
   createContext,
   ReactNode,
@@ -13,17 +13,23 @@ type TaskProviderProps = {
 };
 
 type UseTaskProps = {
-  tasks: Task[];
-  changeStatus: (id: number, newStatus: string) => void;
+  tasksToDo: Task[];
+  tasksDoing: Task[];
+  tasksDone: Task[];
+  changeStatus: (task: Task, newStatus: StatusTask) => void;
   createTask: (newTask: Omit<Task, "id">) => void;
-  removeTask: (id: number) => void;
-  moveTaskPosition: (positionOrigin: number, positionDestiny: number) => void;
+  removeTask: (taskForRemove: Task) => void;
+  moveTaskPosition: (
+    positionOrigin: number,
+    positionDestiny: number,
+    status: StatusTask
+  ) => void;
 };
 
 const TaskContext = createContext<UseTaskProps>({} as UseTaskProps);
 
 export const TaskProvider = ({ children }: TaskProviderProps) => {
-  const [tasks, setTasks] = useState<Task[]>([
+  const [tasksToDo, setTasksToDo] = useState<Task[]>([
     { id: 1, title: "Terminar kanban", description: "teste", status: "toDo" },
     {
       id: 2,
@@ -31,87 +37,166 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
       description: "teste 2",
       status: "toDo",
     },
+  ]);
+
+  const [tasksDoing, setTasksDoing] = useState<Task[]>([
     {
       id: 3,
-      title: "Terminar kanban3",
+      title: "Terminar kanban 3",
       description: "teste 3",
       status: "doing",
     },
     {
       id: 4,
-      title: "Terminar kanban4",
+      title: "Terminar kanban 4",
       description: "teste 4",
+      status: "doing",
+    },
+  ]);
+
+  const [tasksDone, setTasksDone] = useState<Task[]>([
+    {
+      id: 5,
+      title: "Terminar kanban 5",
+      description: "teste 5",
       status: "done",
     },
     {
-      id: 5,
-      title: "Terminar kanban5",
-      description: "teste 5",
-      status: "doing",
-    },
-    {
       id: 6,
-      title: "Terminar kanban6",
+      title: "Terminar kanban 6",
       description: "teste 6",
       status: "done",
     },
   ]);
 
-  const changeStatus = useCallback(
-    (id: number, newStatus: string) => {
-      const arrayChanged = tasks.filter((task) => {
-        if (task.id === id) {
-          return {
-            ...task,
-            status: newStatus,
-          };
-        }
-      });
+  const removeTask = useCallback((taskForRemove: Task) => {
+    if (taskForRemove.status === "toDo") {
+      setTasksToDo((prevTasks) => {
+        const tasksChanged = prevTasks.filter(
+          (task) => task.id !== taskForRemove.id
+        );
 
-      setTasks(arrayChanged);
+        return tasksChanged;
+      });
+    }
+
+    if (taskForRemove.status === "doing") {
+      setTasksDoing((prevTasks) => {
+        const tasksChanged = prevTasks.filter(
+          (task) => task.id !== taskForRemove.id
+        );
+
+        return tasksChanged;
+      });
+    }
+
+    if (taskForRemove.status === "done") {
+      setTasksDone((prevTasks) => {
+        const tasksChanged = prevTasks.filter(
+          (task) => task.id !== taskForRemove.id
+        );
+
+        return tasksChanged;
+      });
+    }
+  }, []);
+
+  const changeStatus = useCallback(
+    (task: Task, newStatus: StatusTask) => {
+      if (newStatus === "toDo") {
+        setTasksToDo((prevTasks) => {
+          const newTasks = [...prevTasks];
+          newTasks.push({ ...task, status: "toDo" });
+          return newTasks;
+        });
+
+        removeTask(task);
+      }
+
+      if (newStatus === "doing") {
+        setTasksDoing((prevTasks) => {
+          const newTasks = [...prevTasks];
+          newTasks.push({ ...task, status: "doing" });
+          return newTasks;
+        });
+
+        removeTask(task);
+      }
+
+      if (newStatus === "done") {
+        setTasksDone((prevTasks) => {
+          const newTasks = [...prevTasks];
+          newTasks.push({ ...task, status: "done" });
+          return newTasks;
+        });
+
+        removeTask(task);
+      }
     },
-    [tasks]
+    [removeTask]
   );
 
   const moveTaskPosition = useCallback(
-    (positionOrigin: number, positionDestiny: number) => {
-      setTasks((prevTasks: Task[]) => {
-        const newTasks = prevTasks.slice();
-        const taskRemoved = newTasks.splice(positionOrigin, 1)[0];
-        newTasks.splice(positionDestiny, 0, taskRemoved);
-        return newTasks;
-      });
+    (positionOrigin: number, positionDestiny: number, status: StatusTask) => {
+      if (status === "toDo") {
+        setTasksToDo((prevTasks: Task[]) => {
+          const newTasks = prevTasks.slice();
+          const taskRemoved = newTasks.splice(positionOrigin, 1)[0];
+          newTasks.splice(positionDestiny, 0, taskRemoved);
+          return newTasks;
+        });
+      }
+
+      if (status === "doing") {
+        setTasksDoing((prevTasks: Task[]) => {
+          const newTasks = prevTasks.slice();
+          const taskRemoved = newTasks.splice(positionOrigin, 1)[0];
+          newTasks.splice(positionDestiny, 0, taskRemoved);
+          return newTasks;
+        });
+      }
+
+      if (status === "done") {
+        setTasksDone((prevTasks: Task[]) => {
+          const newTasks = prevTasks.slice();
+          const taskRemoved = newTasks.splice(positionOrigin, 1)[0];
+          newTasks.splice(positionDestiny, 0, taskRemoved);
+          return newTasks;
+        });
+      }
     },
     []
   );
 
   const createTask = useCallback(
     (newTask: Omit<Task, "id">) => {
-      const biggestId = tasks.reduce((acc, task) => {
+      const biggestId = tasksToDo.reduce((acc, task) => {
         return task.id > acc ? task.id : acc;
       }, 0);
-      setTasks([...tasks, { ...newTask, id: biggestId + 1 }]);
+      setTasksToDo([...tasksToDo, { ...newTask, id: biggestId + 1 }]);
     },
-    [tasks]
-  );
-
-  const removeTask = useCallback(
-    (id: number) => {
-      const tasksChanged = tasks.filter((task) => task.id !== id);
-      setTasks(tasksChanged);
-    },
-    [tasks]
+    [tasksToDo]
   );
 
   const value = useMemo(
     () => ({
-      tasks,
+      tasksToDo,
+      tasksDoing,
+      tasksDone,
       changeStatus,
       createTask,
       removeTask,
       moveTaskPosition,
     }),
-    [tasks, changeStatus, createTask, removeTask, moveTaskPosition]
+    [
+      tasksToDo,
+      tasksDoing,
+      tasksDone,
+      changeStatus,
+      createTask,
+      removeTask,
+      moveTaskPosition,
+    ]
   );
 
   return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;
