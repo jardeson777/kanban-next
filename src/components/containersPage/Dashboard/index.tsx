@@ -18,9 +18,9 @@ const Dashboard = () => {
       <Header />
 
       <Flex justifyContent="space-between">
-        <ListTask title="To do" tasks={tasksToDo} />
-        <ListTask title="Doing" tasks={tasksDoing} />
-        <ListTask title="Done" tasks={tasksDone} />
+        <ListTask status="toDo" tasks={tasksToDo} />
+        <ListTask status="doing" tasks={tasksDoing} />
+        <ListTask status="done" tasks={tasksDone} />
       </Flex>
     </Flex>
   );

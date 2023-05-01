@@ -22,12 +22,6 @@ const CardTask = ({ data, index }: CardTaskProps) => {
 
   const [collectedProps, refDrop] = useDrop(() => ({
     accept: ["CardTask"],
-    drop(item: { index: number; data: Task }, monitor) {
-      if (status !== item.data.status) {
-        changeStatus(item.data, status);
-        return;
-      }
-    },
     hover(item: { index: number; data: Task }, monitor) {
       if (!cardRef.current) {
         return;

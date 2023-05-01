@@ -1,14 +1,43 @@
 import { useTask } from "@/hooks/useTasks";
-import { Task, TaskUtil } from "@/module/Task";
+import { StatusTask, Task, TaskUtil } from "@/module/Task";
 import { Box, Card, Text } from "@chakra-ui/react";
+import { useRef } from "react";
+import { useDrag, useDrop } from "react-dnd";
 import CardTask from "../CardTask";
 
 type ListTaskProps = {
-  title: string;
+  status: StatusTask;
   tasks: Task[];
 };
 
-const ListTask = ({ title, tasks }: ListTaskProps) => {
+const ListTask = ({ status, tasks }: ListTaskProps) => {
+  const listTaskRef = useRef<HTMLDivElement>(null);
+  const { changeStatus } = useTask();
+
+  const [collected, refDrag] = useDrag(() => ({
+    type: "ListTask",
+    item: "",
+  }));
+
+  const [collectedProps, refDrop] = useDrop(() => ({
+    accept: ["CardTask"],
+    drop(item: { index: number; data: Task }, monitor) {
+      if (status !== item.data.status) {
+        changeStatus(item.data, status);
+        return;
+      }
+    },
+  }));
+
+  const createTitle = () => {
+    if (status === "toDo") return "To do";
+    if (status === "doing") return "Doing";
+    return "Done";
+  };
+
+  refDrag(listTaskRef);
+  refDrop(listTaskRef);
+
   return (
     <Box>
       <Text
@@ -18,9 +47,15 @@ const ListTask = ({ title, tasks }: ListTaskProps) => {
         fontWeight="medium"
         marginBottom={3}
       >
-        {title}
+        {createTitle()}
       </Text>
-      <Card width="20vw" minWidth="200px" padding="10px" height="70vh">
+      <Card
+        width="20vw"
+        minWidth="200px"
+        padding="10px"
+        height="70vh"
+        ref={listTaskRef}
+      >
         {tasks.map((task, index) => {
           if (task) return <CardTask key={task.id} data={task} index={index} />;
         })}
