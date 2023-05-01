@@ -8,16 +8,10 @@ const Dashboard = () => {
   const { tasksToDo, tasksDoing, tasksDone } = useTask();
 
   return (
-    <Flex
-      direction="column"
-      justifyContent="space-between"
-      height="auto"
-      flex={1}
-      as="section"
-    >
+    <Flex direction="column" height="auto" flex={1} as="section">
       <Header />
 
-      <Flex justifyContent="space-between">
+      <Flex justifyContent="space-between" paddingTop="50px">
         <ListTask status="toDo" tasks={tasksToDo} />
         <ListTask status="doing" tasks={tasksDoing} />
         <ListTask status="done" tasks={tasksDone} />

@@ -77,7 +77,7 @@ const CardTask = ({ data, index }: CardTaskProps) => {
   return (
     <Card
       width="100%"
-      height="100px"
+      minHeight="100px"
       variant="filled"
       background={selectBackground()}
       padding={3}

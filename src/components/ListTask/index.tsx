@@ -49,16 +49,19 @@ const ListTask = ({ status, tasks }: ListTaskProps) => {
       >
         {createTitle()}
       </Text>
-      <Card
-        width="20vw"
-        minWidth="200px"
-        padding="10px"
-        height="70vh"
-        ref={listTaskRef}
-      >
-        {tasks.map((task, index) => {
-          if (task) return <CardTask key={task.id} data={task} index={index} />;
-        })}
+      <Card maxHeight="70vh" overflowY="auto" overflowX="hidden">
+        <Card
+          width="20vw"
+          minWidth="200px"
+          padding="10px"
+          height="70vh"
+          ref={listTaskRef}
+        >
+          {tasks.map((task, index) => {
+            if (task)
+              return <CardTask key={task.id} data={task} index={index} />;
+          })}
+        </Card>
       </Card>
     </Box>
   );
