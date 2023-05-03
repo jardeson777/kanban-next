@@ -3,6 +3,7 @@ import { StatusTask, Task, TaskUtil } from "@/module/Task";
 import { Box, Card, Text } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
+import CardCreateTask from "../CardCreateTask";
 import CardMarking from "../CardMarking";
 import CardTask from "../CardTask";
 
@@ -15,6 +16,7 @@ const ListTask = ({ status, tasks }: ListTaskProps) => {
   const listTaskRef = useRef<HTMLDivElement>(null);
   const { changeStatus } = useTask();
   const [canDrop, setCanDrop] = useState(false);
+  const [canCreateTask, setCanCreateTask] = useState(false);
 
   const [collected, refDrag] = useDrag(() => ({
     type: "ListTask",
@@ -68,12 +70,15 @@ const ListTask = ({ status, tasks }: ListTaskProps) => {
           padding="10px"
           height="70vh"
           ref={listTaskRef}
+          onMouseEnter={() => setCanCreateTask(true)}
+          onMouseLeave={() => setCanCreateTask(false)}
         >
           {tasks.map((task, index) => {
             if (task)
               return <CardTask key={task.id} data={task} index={index} />;
           })}
           {canDrop ? <CardMarking /> : null}
+          {canCreateTask ? <CardCreateTask status={status} /> : null}
         </Card>
       </Card>
     </Box>

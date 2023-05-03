@@ -8,6 +8,8 @@ import {
   useState,
 } from "react";
 
+import { v4 as uuidv4 } from "uuid";
+
 type TaskProviderProps = {
   children: ReactNode;
 };
@@ -29,45 +31,11 @@ type UseTaskProps = {
 const TaskContext = createContext<UseTaskProps>({} as UseTaskProps);
 
 export const TaskProvider = ({ children }: TaskProviderProps) => {
-  const [tasksToDo, setTasksToDo] = useState<Task[]>([
-    { id: 1, title: "Terminar kanban", description: "teste", status: "toDo" },
-    {
-      id: 2,
-      title: "Terminar kanban 2",
-      description: "teste 2",
-      status: "toDo",
-    },
-  ]);
+  const [tasksToDo, setTasksToDo] = useState<Task[]>([]);
 
-  const [tasksDoing, setTasksDoing] = useState<Task[]>([
-    {
-      id: 3,
-      title: "Terminar kanban 3",
-      description: "teste 3",
-      status: "doing",
-    },
-    {
-      id: 4,
-      title: "Terminar kanban 4",
-      description: "teste 4",
-      status: "doing",
-    },
-  ]);
+  const [tasksDoing, setTasksDoing] = useState<Task[]>([]);
 
-  const [tasksDone, setTasksDone] = useState<Task[]>([
-    {
-      id: 5,
-      title: "Terminar kanban 5",
-      description: "teste 5",
-      status: "done",
-    },
-    {
-      id: 6,
-      title: "Terminar kanban 6",
-      description: "teste 6",
-      status: "done",
-    },
-  ]);
+  const [tasksDone, setTasksDone] = useState<Task[]>([]);
 
   const removeTask = useCallback((taskForRemove: Task) => {
     if (taskForRemove.status === "toDo") {
@@ -168,15 +136,37 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
     []
   );
 
-  const createTask = useCallback(
-    (newTask: Omit<Task, "id">) => {
-      const biggestId = tasksToDo.reduce((acc, task) => {
-        return task.id > acc ? task.id : acc;
-      }, 0);
-      setTasksToDo([...tasksToDo, { ...newTask, id: biggestId + 1 }]);
-    },
-    [tasksToDo]
-  );
+  const createTask = useCallback((newTask: Omit<Task, "id">) => {
+    if (newTask.status === "toDo") {
+      const id = uuidv4();
+      setTasksToDo((prevTasks) => {
+        const newTasks = [...prevTasks];
+        newTasks.push({ ...newTask, id });
+
+        return newTasks;
+      });
+    }
+
+    if (newTask.status === "doing") {
+      const id = uuidv4();
+      setTasksDoing((prevTasks) => {
+        const newTasks = [...prevTasks];
+        newTasks.push({ ...newTask, id });
+
+        return newTasks;
+      });
+    }
+
+    if (newTask.status === "done") {
+      const id = uuidv4();
+      setTasksDone((prevTasks) => {
+        const newTasks = [...prevTasks];
+        newTasks.push({ ...newTask, id });
+
+        return newTasks;
+      });
+    }
+  }, []);
 
   const value = useMemo(
     () => ({
