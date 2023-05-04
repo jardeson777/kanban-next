@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { Inter } from "next/font/google";
 import Menu from "@/components/Menu";
-import { Box, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import Dashboard from "@/components/containersPage/Dashboard";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";

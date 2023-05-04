@@ -32,9 +32,7 @@ const TaskContext = createContext<UseTaskProps>({} as UseTaskProps);
 
 export const TaskProvider = ({ children }: TaskProviderProps) => {
   const [tasksToDo, setTasksToDo] = useState<Task[]>([]);
-
   const [tasksDoing, setTasksDoing] = useState<Task[]>([]);
-
   const [tasksDone, setTasksDone] = useState<Task[]>([]);
 
   const removeTask = useCallback((taskForRemove: Task) => {

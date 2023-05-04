@@ -1,6 +1,7 @@
 import { useTask } from "@/hooks/useTasks";
-import { StatusTask, Task } from "@/module/Task";
-import { Box, Card, Heading, Text } from "@chakra-ui/react";
+import { Task } from "@/module/Task";
+import { SmallCloseIcon } from "@chakra-ui/icons";
+import { Box, Button, Card, Heading, Icon, Text } from "@chakra-ui/react";
 import { useRef } from "react";
 import { useDrag, useDrop, XYCoord } from "react-dnd";
 
@@ -11,9 +12,9 @@ type CardTaskProps = {
 
 const CardTask = ({ data, index }: CardTaskProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
-  const { moveTaskPosition, changeStatus } = useTask();
+  const { moveTaskPosition, removeTask } = useTask();
 
-  const { id, description, title, status } = data;
+  const { description, title, status } = data;
 
   const [collected, refDrag] = useDrag(() => ({
     type: "CardTask",
@@ -86,6 +87,17 @@ const CardTask = ({ data, index }: CardTaskProps) => {
     >
       <Heading as="h2" fontSize="md" fontWeight="semibold">
         {title}
+
+        <Button
+          variant="ghost"
+          position="absolute"
+          right="2px"
+          top="2px"
+          size="sm"
+          onClick={() => removeTask(data)}
+        >
+          <SmallCloseIcon color="gray.500" />
+        </Button>
       </Heading>
 
       <Box marginTop="3">
